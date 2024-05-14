@@ -188,8 +188,12 @@ function getSourceCodeConfig(): ICodeConfiguration {
 }
 
 function getRuntime(): Runtime {
+    console.log("Before getting runtime");
     const rawRuntime = getInput('runtime', { required: true });
+    console.log("Got the runtime ", rawRuntime);
     const runtime = rawRuntime.toUpperCase();
+    console.log("Got the runtime uppercase ", runtime);
+    console.log("Valid runtimes", JSON.stringify(Object.keys(Runtime)));
     if (!Object.keys(Runtime).includes(runtime)) {
         throw new Error(`Specified runtime (${rawRuntime}) does not belong to the supported range: ${JSON.stringify(Object.keys(Runtime))}`);
     }
