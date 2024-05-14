@@ -25,6 +25,7 @@ export interface IImageConfiguration {
 
 export interface ICreateOrUpdateActionParams {
     action: Actions.CreateOrUpdate;
+    autodeployment: boolean;
     serviceName: string;
     sourceConfig: ICodeConfiguration | IImageConfiguration;
     port: number;
@@ -139,6 +140,8 @@ function getCreateOrUpdateConfig(): ICreateOrUpdateActionParams {
 
     const instanceRoleArn = getOptionalInputStr('instance-role-arn', { trimWhitespace: true });
 
+    const autodeployment = getInputBool('autodeployment', true);
+
     return {
         action,
         serviceName,
@@ -154,6 +157,7 @@ function getCreateOrUpdateConfig(): ICreateOrUpdateActionParams {
         tags: getTags(tags),
         autoScalingConfigArn: autoScalingConfigArn,
         instanceRoleArn: instanceRoleArn,
+        autodeployment: autodeployment,
     };
 }
 

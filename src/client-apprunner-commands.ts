@@ -12,7 +12,7 @@ export function getCreateCommand(config: ICreateOrUpdateActionParams): CreateSer
         AutoScalingConfigurationArn: config.autoScalingConfigArn,
         SourceConfiguration: (config.sourceConfig.sourceType == 'image')
             ? getImageSourceConfiguration(config.port, config.sourceConfig, config.environment, config.environmentSecret)
-            : getCodeSourceConfiguration(config.port, config.sourceConfig, config.environment, config.environmentSecret),
+            : getCodeSourceConfiguration(config.port, config.sourceConfig, config.autodeployment, config.environment, config.environmentSecret),
         Tags: config.tags,
     });
 }
@@ -28,7 +28,7 @@ export function getUpdateCommand(serviceArn: string, config: ICreateOrUpdateActi
         AutoScalingConfigurationArn: config.autoScalingConfigArn,
         SourceConfiguration: (config.sourceConfig.sourceType == 'image')
             ? getImageSourceConfiguration(config.port, config.sourceConfig, config.environment, config.environmentSecret)
-            : getCodeSourceConfiguration(config.port, config.sourceConfig, config.environment, config.environmentSecret),
+            : getCodeSourceConfiguration(config.port, config.sourceConfig, config.autodeployment, config.environment, config.environmentSecret),
     });
 }
 
@@ -68,12 +68,12 @@ function getImageType(imageUri: string): ImageRepositoryType {
     return imageUri.startsWith("public.ecr") ? ImageRepositoryType.ECR_PUBLIC : ImageRepositoryType.ECR
 }
 
-function getCodeSourceConfiguration(port: number, config: ICodeConfiguration, runtimeEnvironmentVariables?: Record<string, string>, runtimeEnvironmentSecrets?: Record<string, string>): SourceConfiguration {
+function getCodeSourceConfiguration(port: number, config: ICodeConfiguration, autodeployment: boolean, runtimeEnvironmentVariables?: Record<string, string>, runtimeEnvironmentSecrets?: Record<string, string>): SourceConfiguration {
     return {
         AuthenticationConfiguration: {
             ConnectionArn: config.sourceConnectionArn,
         },
-        AutoDeploymentsEnabled: true,
+        AutoDeploymentsEnabled: autodeployment,
         CodeRepository: {
             RepositoryUrl: config.repoUrl,
             SourceCodeVersion: {
